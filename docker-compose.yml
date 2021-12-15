@@ -1,0 +1,33 @@
+version: "3"
+services:
+  postgresql:
+    container_name: postgreSqldbserver
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+  myapp:
+    build: ./
+    container_name: myapp
+    image: myapp
+    command: /bin/sh -c "gradle clean build -x test bootRun"
+    restart: always
+    volumes:
+      - ./:/deploy
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+    links:
+      - postgresql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql/test
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
