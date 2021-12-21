@@ -1,15 +1,14 @@
 pipeline {
-    agent any
-
-    stages {
+   agent { dockerfile true }
+   stages {
         stage('Build') {
             steps {
                 echo 'Building..'
             }
         }
         stage('Test') {
-            steps {
-                echo 'Testing..'
+             steps {
+                sh 'docker --version'
             }
         }
         stage('Deploy') {
